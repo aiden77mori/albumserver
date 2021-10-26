@@ -1,0 +1,1 @@
+exports.FAST2SMS = process.env.FAST2SMS || 'weBQKBrtZzLnD2ZUEnUYJIO40zZGnjgZm3BA1SAUd0qZ56gHm0k3X45DWR9c';

@@ -19,6 +19,9 @@ router.route('/create')
 router.route('/get')
     .post(Comment.get);
 
+router.route('/getRecent')
+    .post(Comment.getRecent);
+
 // @route  POST api/commnets/getCount
 // @desc   Get comments by user_id
 // @access Public

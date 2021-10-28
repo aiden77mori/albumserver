@@ -37,6 +37,17 @@ module.exports = class contactController {
         .catch(({ err }) => res.status(500).send({ err }));
     }
 
+    static getRecent(req, res) {
+        const album_id = req.body.album_id;
+        const photo_id = req.body.photo_id;
+
+        db.query(`SELECT c.*, now() - c.created_date as past_time, u.first_name, u.last_name, u.avatar FROM comments as c LEFT JOIN users as u on u.id = c.user_id WHERE album_id = $1 AND photo_id = $2 ORDER BY c.parent_id ASC`, [album_id, photo_id])
+        .then((result) => {
+            res.status(200).send(result.rows);
+        })
+        .catch(({ err }) => res.status(500).send({ err }));
+    }
+
     static getCount(req, res) {
         const user_id = req.body.user_id;
 

@@ -66,7 +66,7 @@ app.use('/api/photos', cors(corsOptions), photos);
 app.use('/api/visits', cors(corsOptions), visits);
 app.use('/api/comments', cors(corsOptions), comments);
 
-app.get('/cool', (req, res) => res.status(200).json({message: 'Cool'}));
+app.get('/cool', (req, res) => res.status(200).json(cool()));
 app.get('/times', (req, res) => res.send(showTimes()));
 
 showTimes = () => {

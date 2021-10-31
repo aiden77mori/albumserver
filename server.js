@@ -54,6 +54,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: true }));
 app.use(morgan('dev'));
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET , PUT , POST , DELETE");
+    res.header("Access-Control-Allow-Credentials", false);
+    res.header("Access-Control-Allow-Headers", "Content-Type, x-requested-with");
+    next(); // Important
+})
+
 // Use APIs (combination)
 app.get('/', (req, res) => {
     res.status(200).json({message: 'Hello World'});

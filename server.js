@@ -66,7 +66,7 @@ app.use('/api/photos', cors(corsOptions), photos);
 app.use('/api/visits', cors(corsOptions), visits);
 app.use('/api/comments', cors(corsOptions), comments);
 
-app.get('/cool', (req, res) => res.json(cool()));
+app.get('/cool', (req, res) => res.status(200).json({message: 'Cool'}));
 // Passport middleware
 app.use(passport.initialize());
 // Passport Config

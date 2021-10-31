@@ -67,6 +67,17 @@ app.use('/api/visits', cors(corsOptions), visits);
 app.use('/api/comments', cors(corsOptions), comments);
 
 app.get('/cool', (req, res) => res.status(200).json({message: 'Cool'}));
+app.get('/times', (req, res) => res.send(showTimes()));
+
+showTimes = () => {
+  let result = '';
+  const times = process.env.TIMES || 5;
+  for (i = 0; i < times; i++) {
+    result += i + ' ';
+  }
+  return result;
+}
+
 // Passport middleware
 app.use(passport.initialize());
 // Passport Config

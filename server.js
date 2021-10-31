@@ -21,18 +21,12 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
     'capacitor://localhost',
     'ionic://localhost',
-    'capacitor://192.168.114.12',
-    'ionic://192.168.114.12',
-    'http://192.168.114.12',
-    'capacitor://192.168.114.12',
     'http://localhost',
     'http://localhost:8080',
     'http://localhost:8100',
-    'http://192.168.114.12:8100',
     'http://192.168.114.14:8100',
     'http://192.168.114.14:8200',
     'http://192.168.114.14:8101',
-    'http://192.168.114.12:8101',
   ];
   
   // Reflect the origin if it's in the allowed list or not defined (cURL, Postman, etc.)

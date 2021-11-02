@@ -11,10 +11,28 @@ module.exports = class contactController {
         // ELSE IF contactStatus == 0, Others contact me.
         if(contactStatus == 1) {
             
-            if(searchValue) {
-                db.query(`SELECT C
+            db.query(`SELECT C
+                        .ID AS cid,
+                        u.id as client_id,
+                        C.block_status,
+                        u.first_name,
+                        u.last_name,
+                        C.clientname,
+                        C.client_phone_number,
+                        u.status,
+                        u.avatar 
+                    FROM
+                        contacts
+                        AS C LEFT JOIN users AS u ON u.phone_number = C.client_phone_number 
+                    WHERE c.user_phone_number = $1`, [phone_number])
+            .then(result => res.send(result.rows))
+            .catch(({ err }) => res.status(500).send(err));
+
+        } else {
+           
+            db.query(`SELECT C
                             .ID AS cid,
-                            u.id as client_id,
+                            u.id as user_id,
                             C.block_status,
                             u.first_name,
                             u.last_name,
@@ -23,65 +41,11 @@ module.exports = class contactController {
                             u.avatar 
                         FROM
                             contacts
-                            AS C LEFT JOIN users AS u ON u.phone_number = C.client_phone_number 
-                        WHERE c.user_phone_number = $1 AND u.phone_number like $2`, [phone_number, '%'+searchValue+'%'])
-                .then(result => res.send(result.rows))
-                .catch(({ err }) => res.status(500).send(err));
-            } else {
-                db.query(`SELECT C
-                            .ID AS cid,
-                            u.id as client_id,
-                            C.block_status,
-                            u.first_name,
-                            u.last_name,
-                            C.clientname,
-                            C.client_phone_number,
-                            u.status,
-                            u.avatar 
-                        FROM
-                            contacts
-                            AS C LEFT JOIN users AS u ON u.phone_number = C.client_phone_number 
-                        WHERE c.user_phone_number = $1`, [phone_number])
-                .then(result => res.send(result.rows))
-                .catch(({ err }) => res.status(500).send(err));
-            }
-
-        } else {
-
-            if(searchValue) {
-                db.query(`SELECT C
-                                .ID AS cid,
-                                u.id as user_id,
-                                C.block_status,
-                                u.first_name,
-                                u.last_name,
-                                u.phone_number,
-                                u.status,
-                                u.avatar 
-                            FROM
-                                contacts
-                                AS C LEFT JOIN users AS u ON u.phone_number = C.user_phone_number
-                            WHERE c.client_phone_number = $1 AND u.phone_number like $2`, [phone_number, '%'+searchValue+'%'])
-                .then(result => res.send(result.rows))
-                .catch(({ err }) => res.status(500).send(err));
-            } else {
-                db.query(`SELECT C
-                                .ID AS cid,
-                                u.id as user_id,
-                                C.block_status,
-                                u.first_name,
-                                u.last_name,
-                                u.phone_number,
-                                u.status,
-                                u.avatar 
-                            FROM
-                                contacts
-                                AS C LEFT JOIN users AS u ON u.phone_number = C.user_phone_number
-                            WHERE
-                                C.client_phone_number = $1`, [phone_number])
-                .then(result => res.send(result.rows))
-                .catch(({ err }) => res.status(500).send(err));
-            }
+                            AS C LEFT JOIN users AS u ON u.phone_number = C.user_phone_number
+                        WHERE
+                            C.client_phone_number = $1`, [phone_number])
+            .then(result => res.send(result.rows))
+            .catch(({ err }) => res.status(500).send(err));
 
         }
     }
@@ -111,7 +75,6 @@ module.exports = class contactController {
 
     static create(req, res) {
 
-        // const user_id = req.user.id;
         const user_phone_number = req.body.phone_number;
         const contact_list = req.body.contact_list;
         let list = '';

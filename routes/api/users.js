@@ -23,6 +23,24 @@ router.get('/ptest', Auth, (req, res) => res.status(200).json(req.user));
 router.route('/register')
     .post(User.register);
 
+// @route  POST api/users/otpVerify
+// @desc   Verify otpCode
+// @access Public
+router.route('/otpverify')
+    .post(User.otpVerify);
+
+// @route  POST api/users/resendOtp
+// @desc   Resend phone number for otp
+// @access Public
+router.route('/resendOtp')
+    .post(User.resendOtp);
+
+// @route  POST api/users/updatePhoneNumber
+// @desc   Change Phone Number in opt verify page
+// @access Public
+router.route('/updatePhoneNumber')
+    .post(User.updatePhoneNumber);
+
 // @route  POST api/users/login
 // @desc   Login User
 // @access Public

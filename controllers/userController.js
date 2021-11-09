@@ -1,14 +1,12 @@
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
-const { generateOTP, fast2sms } = require('../config/otputils');
-// var otpGenerator = require('otp-generator');
-
+const { generateOTP } = require('../config/otputils');
+const { sendSMS } = require('../config/otputils');
 const db = require('../db');
 
 // Load Validation
 const validationRegister = require('../validation/register');
 const validationLogin = require('../validation/login');
-
 module.exports = class userController {
 
     static register(req, res) {
@@ -29,7 +27,9 @@ module.exports = class userController {
             return;
         }
         const otp = generateOTP(4);
-        console.log(otp);
+
+        //send sms
+        sendSMS(newUser.phone_number, otp);
 
         const phone_number = newUser.phone_number;
 
@@ -44,6 +44,43 @@ module.exports = class userController {
                 .catch(({ err }) => res.status(500).send({ err }));
             }
         })
+        .catch(({ err }) => res.status(500).send({ err }));
+    }
+
+    static otpVerify(req, res) {
+        const otpCode = req.body.otpCode;
+        const phoneNumber = req.body.phoneNumber;
+        
+        db.query(`SELECT otp FROM users WHERE phone_number = $1`, [phoneNumber])
+        .then(user => {
+            if(otpCode == user.rows[0]['otp']) {
+                db.query(`UPDATE users SET otp_verify = 1 WHERE phone_number = $1`, [phoneNumber])
+                .then(() => res.status(200).send({message: 'success'}))
+                .catch(({ err }) => res.status(500).send({ err }));
+            } else {
+                res.status(404).send({message: 'failed'});
+            }
+        })
+    }
+
+    static resendOtp(req, res) {
+        const phoneNumber = req.body.phoneNumber;
+        const otp = generateOTP(4);
+        
+        //send sms
+        sendSMS(phoneNumber, otp);
+
+        db.query(`UPDATE users SET otp = $1 WHERE phone_number = $2`, [otp, phoneNumber])
+        .then(() => res.status(200).send({message: 'success'}))
+        .catch(({ err }) => res.status(500).send({ err }));
+    }
+
+    static updatePhoneNumber(req, res) {
+        const newNumber = req.body.newNumber;
+        const oldNumber = req.body.oldNumber;
+
+        db.query(`UPDATE users SET phone_number = $1 WHERE phone_number = $2`, [newNumber, oldNumber])
+        .then(() => res.status(200).send({message: 'success'}))
         .catch(({ err }) => res.status(500).send({ err }));
     }
 
@@ -158,27 +195,6 @@ module.exports = class userController {
             .then((result) => res.status(200).send(result.rows))
             .catch(({ err }) => res.status(500).send({ err }));                
     }
-
-    // static async otpVerify(req, res, next) {
-    //    try {
-    //         const phone_number = req.body.phone_number;
-
-    //         const otp = generateOTP(4);
-    //         // save otp to user collection
-    //         // user.phoneOtp = otp;
-    //         // await user.save();
-    //         // send otp to phone number
-    //         await fast2sms(
-    //           {
-    //             message: `Your OTP is ${otp}`,
-    //             contactNumber: phone_number,
-    //           },
-    //           next
-    //         );
-    //       } catch (error) {
-    //         next(error);
-    //       }
-    //   }
 
 }
 

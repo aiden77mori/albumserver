@@ -3,7 +3,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const passport = require('passport');
-const cool = require('cool-ascii-faces');
 require('./db');
 
 // Import APIs
@@ -68,7 +67,6 @@ app.use('/api/photos', cors(corsOptions), photos);
 app.use('/api/visits', cors(corsOptions), visits);
 app.use('/api/comments', cors(corsOptions), comments);
 
-app.get('/cool', (req, res) => res.status(200).json(cool()));
 app.get('/times', (req, res) => res.send(showTimes()));
 
 showTimes = () => {

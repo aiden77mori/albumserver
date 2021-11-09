@@ -7,11 +7,11 @@ dotenv.config();
 const postgresURI = require('../config/keys').postgreURI;
 
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || postgresURI,
-    ssl: false,
-    //  ssl: {
-    //     rejectUnauthorized: false
-    // }
+    connectionString: postgresURI,
+    // ssl: false,
+     ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 (async () => {

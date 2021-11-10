@@ -27,7 +27,7 @@ router.route('/register')
 // @desc   Verify otpCode
 // @access Public
 router.route('/otpverify')
-    .post(User.otpVerify);
+    .post(User.otpverify);
 
 // @route  POST api/users/resendOtp
 // @desc   Resend phone number for otp

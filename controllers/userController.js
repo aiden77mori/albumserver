@@ -47,7 +47,7 @@ module.exports = class userController {
         .catch(({ err }) => res.status(500).send({ err }));
     }
 
-    static otpVerify(req, res) {
+    static otpverify(req, res) {
         const otpCode = req.body.otpCode;
         const phoneNumber = req.body.phoneNumber;
         

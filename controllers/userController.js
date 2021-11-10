@@ -39,7 +39,7 @@ module.exports = class userController {
                 errors.phone_number = 'Phone number is exist';
                 res.status(400).json(errors);
             } else {
-                db.query(`INSERT INTO users (first_name, last_name, phone_number) VALUES ($1, $2, $3)`, [newUser.first_name, newUser.last_name, newUser.phone_number])
+                db.query(`INSERT INTO users (first_name, last_name, phone_number, otp) VALUES ($1, $2, $3, $4)`, [newUser.first_name, newUser.last_name, newUser.phone_number, otp])
                 .then(() => res.status(201).send({newUser: newUser, tc: tc}))
                 .catch(({ err }) => res.status(500).send({ err }));
             }
@@ -50,9 +50,11 @@ module.exports = class userController {
     static otpverify(req, res) {
         const otpCode = req.body.otpCode;
         const phoneNumber = req.body.phoneNumber;
-        
+        console.log(phoneNumber);
         db.query(`SELECT otp FROM users WHERE phone_number = $1`, [phoneNumber])
         .then(user => {
+            console.log(otpCode);
+            console.log(user.rows);
             if(otpCode == user.rows[0]['otp']) {
                 db.query(`UPDATE users SET otp_verify = 1 WHERE phone_number = $1`, [phoneNumber])
                 .then(() => res.status(200).send({message: 'success'}))

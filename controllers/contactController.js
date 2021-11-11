@@ -24,7 +24,7 @@ module.exports = class contactController {
                     FROM
                         contacts
                         AS C LEFT JOIN users AS u ON u.phone_number = C.client_phone_number 
-                    WHERE c.user_phone_number = $1`, [phone_number])
+                    WHERE c.user_phone_number = $1 ORDER BY C.clientname ASC`, [phone_number])
             .then(result => res.send(result.rows))
             .catch(({ err }) => res.status(500).send(err));
 

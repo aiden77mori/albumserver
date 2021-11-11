@@ -19,6 +19,9 @@ router.route('/save')
 router.route('/get')
     .post(Photo.get);
 
+router.route('/getRecent')
+    .post(Photo.getRecent);
+
 // @route  POST api/photos/get
 // @desc   Get photos by album_id
 // @access Public

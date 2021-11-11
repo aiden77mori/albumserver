@@ -53,8 +53,6 @@ module.exports = class userController {
         console.log(phoneNumber);
         db.query(`SELECT otp FROM users WHERE phone_number = $1`, [phoneNumber])
         .then(user => {
-            console.log(otpCode);
-            console.log(user.rows);
             if(otpCode == user.rows[0]['otp']) {
                 db.query(`UPDATE users SET otp_verify = 1 WHERE phone_number = $1`, [phoneNumber])
                 .then(() => res.status(200).send({message: 'success'}))

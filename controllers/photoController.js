@@ -22,6 +22,34 @@ module.exports = class photoController {
         .catch(({ err }) => res.status(500).send({ err }));
     }
 
+    static getRecent(req,res) {
+        db.query(`Select p.id as photo_id, a.id as album_id, u.id as user_id, u.first_name, u.last_name, u.avatar
+                    From photos p
+                    Join albums as a On p.album_id= a.id
+                    join users as u on u.id = a.user_id
+                    ORDER BY p.id desc
+        `).then((result) => {
+            if(result.rows.length > 0) {
+                let sendList = [];
+                let sign = 0;
+                sendList.push(result.rows[0]);
+                result.rows.map((res, i) => {
+                    sign = 0;
+                    for (let i = 0; i < sendList.length; i ++) {
+                        if(sendList[i]['user_id'] == res['user_id']) {
+                            sign = 1;
+                            break;
+                        }
+                    }
+                    if(sign == 0) {
+                        sendList.push(res);
+                    }
+                });
+                res.status(200).send(sendList);
+            }
+        }).catch(({ err }) => res.status(500).send({ err }));
+    }
+
     static getAllByAlbum(req, res) {
         const album_id = req.body.album_id;
         

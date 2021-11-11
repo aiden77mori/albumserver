@@ -8,10 +8,10 @@ const postgresURI = require('../config/keys').postgreURI;
 
 const pool = new Pool({
     connectionString: postgresURI,
-    // ssl: false,
-     ssl: {
-        rejectUnauthorized: false
-    }
+    ssl: false,
+    //  ssl: {
+    //     rejectUnauthorized: false
+    // }
 });
 
 (async () => {
